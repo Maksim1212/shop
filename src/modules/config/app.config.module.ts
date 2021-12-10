@@ -7,7 +7,6 @@ import { AppConfig } from './models/app.config';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env.development', '.env.production'],
     }),
   ],
   providers: [AppConfig, AppConfigService, ConfigService],
