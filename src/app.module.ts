@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppConfigModule } from './modules/config/app.config.module';
+import { UsersModule } from './modules/user/user.module';
+import { User } from './modules/user/user.entity';
 
 @Module({
   imports: [
@@ -9,7 +11,7 @@ import { AppConfigModule } from './modules/config/app.config.module';
     ConfigModule,
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [ConfigModule, UsersModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         type: 'postgres',
@@ -18,7 +20,8 @@ import { AppConfigModule } from './modules/config/app.config.module';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        entities: [],
+        entities: [User],
+        synchronize: true,
       }),
     }),
   ],

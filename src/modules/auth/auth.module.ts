@@ -3,10 +3,10 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { AuthService } from './auth.service';
-import { UserService } from '../user/user.service';
 import { RolesGuard } from './guards/jwt-auth.roles.guard';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthConfig } from '../config/models/auth.config';
+import { AppConfigService } from '../config/app.config.service';
 
 @Module({
   imports: [
@@ -23,13 +23,12 @@ import { AuthConfig } from '../config/models/auth.config';
     }),
   ],
   providers: [
+    AppConfigService,
+    AuthConfig,
     JwtStrategy,
     AuthService,
-    UserService,
     RolesGuard,
-    AuthConfig,
   ],
   exports: [AuthService],
 })
-export class AuthModule {
-}
+export class AuthModule {}
