@@ -7,7 +7,7 @@ export class AuthConfig {
   readonly jwtExpiration: string;
 
   constructor(private readonly configService: AppConfigService) {
-    this.jwtSecret = this.configService.get<string>('JWT_SECRET');
-    this.jwtExpiration = this.configService.get<string>('JWT_EXPIRATION');
+    this.jwtSecret = this.configService.get('JWT_SECRET');
+    this.jwtExpiration = this.configService.get('JWT_EXPIRATION');
   }
 }

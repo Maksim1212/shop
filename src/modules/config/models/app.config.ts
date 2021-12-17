@@ -7,9 +7,7 @@ export class AppConfig {
   readonly environmentName: string;
 
   constructor(private readonly configService: AppConfigService) {
-    this.port = +this.configService.get<number>('APP_PORT');
-    this.environmentName = this.configService.get<string>(
-      'APP_ENVIRONMENT_NAME',
-    );
+    this.port = +this.configService.get('APP_PORT');
+    this.environmentName = this.configService.get('APP_ENVIRONMENT_NAME');
   }
 }
