@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppConfigModule } from './modules/config/app.config.module';
 import { UsersModule } from './modules/user/user.module';
 import { User } from './modules/user/user.entity';
+import { DbConfig } from './modules/config/models/db.config';
 
 @Module({
   imports: [
@@ -11,18 +12,21 @@ import { User } from './modules/user/user.entity';
     ConfigModule,
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule, UsersModule],
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('DB_HOST'),
-        port: configService.get('DB_PORT'),
-        username: configService.get('DB_USERNAME'),
-        password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_NAME'),
-        entities: [User],
-        synchronize: true,
-      }),
+      imports: [AppConfigModule, ConfigModule, UsersModule],
+      inject: [DbConfig],
+      useFactory: async (dbConfig: DbConfig) => {
+        const { database, password, username, port, host } = dbConfig;
+        return {
+          type: 'postgres',
+          host,
+          port,
+          username,
+          password,
+          database,
+          entities: [User],
+          synchronize: true,
+        };
+      },
     }),
   ],
 })
