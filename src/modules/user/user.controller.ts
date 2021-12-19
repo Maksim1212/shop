@@ -4,6 +4,7 @@ import {
   HttpCode,
   Post,
   Request,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -30,6 +31,9 @@ export class UserController {
     @Body() userData: UserLoginDto,
   ): Promise<{ access_token: string }> {
     const reqUser = await this.userService.finUserByEmail(userData.email);
+    if (!reqUser) {
+      throw new UnauthorizedException('Wrong email or password');
+    }
     return this.authService.login(reqUser, userData.password);
   }
 
@@ -38,8 +42,8 @@ export class UserController {
     return this.userService.createUser(newUser);
   }
 
-  @Roles(Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Post('test')
   test(@Request() req): { test: string } {
     console.log(req.body);

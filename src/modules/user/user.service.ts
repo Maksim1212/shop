@@ -12,7 +12,7 @@ export class UserService {
   ) {}
 
   async finUserByEmail(email: string): Promise<User> {
-    return this.usersRepository.findOneOrFail({ email });
+    return this.usersRepository.findOne({ email });
   }
 
   async createUser(data: UserRegisterDto): Promise<string> {
