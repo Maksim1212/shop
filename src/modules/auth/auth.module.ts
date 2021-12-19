@@ -4,16 +4,17 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { AuthService } from './auth.service';
 import { RolesGuard } from './guards/jwt-auth.roles.guard';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { AuthConfig } from '../config/models/auth.config';
 import { AppConfigService } from '../config/app.config.service';
+import { AppConfigModule } from '../config/app.config.module';
 
 @Module({
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
+      imports: [AppConfigModule, ConfigModule],
+      inject: [AuthConfig],
       useFactory: async (authConfig: AuthConfig) => {
         const { jwtSecret, jwtExpiration } = authConfig;
         return {
@@ -26,6 +27,7 @@ import { AppConfigService } from '../config/app.config.service';
     }),
   ],
   providers: [
+    AuthConfig,
     AppConfigService,
     AuthConfig,
     JwtStrategy,
@@ -34,5 +36,4 @@ import { AppConfigService } from '../config/app.config.service';
   ],
   exports: [AuthService],
 })
-export class AuthModule {
-}
+export class AuthModule {}
