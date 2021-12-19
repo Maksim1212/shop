@@ -8,8 +8,6 @@ import { DbConfig } from './modules/config/models/db.config';
 
 @Module({
   imports: [
-    AppConfigModule,
-    ConfigModule,
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
       imports: [AppConfigModule, ConfigModule, UsersModule],
