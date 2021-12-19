@@ -14,12 +14,15 @@ import { AppConfigService } from '../config/app.config.service';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get('JWT_SECRET'),
-        signOptions: {
-          expiresIn: configService.get('JWT_EXPIRATION'),
-        },
-      }),
+      useFactory: async (authConfig: AuthConfig) => {
+        const { jwtSecret, jwtExpiration } = authConfig;
+        return {
+          secret: jwtSecret,
+          signOptions: {
+            expiresIn: jwtExpiration,
+          },
+        };
+      },
     }),
   ],
   providers: [
@@ -31,4 +34,5 @@ import { AppConfigService } from '../config/app.config.service';
   ],
   exports: [AuthService],
 })
-export class AuthModule {}
+export class AuthModule {
+}
